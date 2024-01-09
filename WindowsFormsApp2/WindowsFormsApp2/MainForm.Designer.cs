@@ -57,6 +57,7 @@ namespace WindowsFormsApp2
             this.label6 = new System.Windows.Forms.Label();
             this.heightTextBox = new System.Windows.Forms.TextBox();
             this.logTextBox = new System.Windows.Forms.RichTextBox();
+            this.focusButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -203,7 +204,7 @@ namespace WindowsFormsApp2
             // moveWindowButton
             // 
             this.moveWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.moveWindowButton.Location = new System.Drawing.Point(304, 112);
+            this.moveWindowButton.Location = new System.Drawing.Point(302, 86);
             this.moveWindowButton.Name = "moveWindowButton";
             this.moveWindowButton.Size = new System.Drawing.Size(75, 23);
             this.moveWindowButton.TabIndex = 107;
@@ -214,7 +215,7 @@ namespace WindowsFormsApp2
             // resizeWindowButton
             // 
             this.resizeWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.resizeWindowButton.Location = new System.Drawing.Point(304, 141);
+            this.resizeWindowButton.Location = new System.Drawing.Point(302, 115);
             this.resizeWindowButton.Name = "resizeWindowButton";
             this.resizeWindowButton.Size = new System.Drawing.Size(75, 23);
             this.resizeWindowButton.TabIndex = 108;
@@ -313,11 +314,22 @@ namespace WindowsFormsApp2
             this.logTextBox.TabIndex = 13;
             this.logTextBox.Text = "";
             // 
+            // focusButton
+            // 
+            this.focusButton.Location = new System.Drawing.Point(302, 144);
+            this.focusButton.Name = "focusButton";
+            this.focusButton.Size = new System.Drawing.Size(75, 23);
+            this.focusButton.TabIndex = 109;
+            this.focusButton.Text = "Focus";
+            this.focusButton.UseVisualStyleBackColor = true;
+            this.focusButton.Click += new System.EventHandler(this.focusButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(426, 399);
+            this.Controls.Add(this.focusButton);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.heightTextBox);
             this.Controls.Add(this.widthTextBox);
@@ -374,6 +386,7 @@ namespace WindowsFormsApp2
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox heightTextBox;
         private System.Windows.Forms.RichTextBox logTextBox;
+        private System.Windows.Forms.Button focusButton;
     }
 }
 

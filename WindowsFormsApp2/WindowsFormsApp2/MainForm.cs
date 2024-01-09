@@ -121,7 +121,7 @@ namespace WindowsFormsApp2
         {
             if (findTextBox.TextLength != 0)
             {
-                var window = FindWindow(findTextBox.Text);
+                var window = WindowsUtil.FindWindow(findTextBox.Text);
                 if (window != null)
                 {
                     findResultLabel.Text = $"{window.Name} ({window.Bounds})";
@@ -146,7 +146,7 @@ namespace WindowsFormsApp2
             {
                 var x = int.Parse(posXTestBox.Text);
                 var y = int.Parse(posYTextBox.Text);
-                var res = CurrentWindow.Move(x, y);
+                CurrentWindow.Move(x, y);
                 findResultLabel.Text = $"{CurrentWindow.Name} ({CurrentWindow.Bounds})";
             }
         }
@@ -160,7 +160,7 @@ namespace WindowsFormsApp2
             {
                 var width = int.Parse(widthTextBox.Text);
                 var height = int.Parse(heightTextBox.Text);
-                var res = CurrentWindow.Resize(width, height);
+                CurrentWindow.Resize(width, height);
                 findResultLabel.Text = $"{CurrentWindow.Name} ({CurrentWindow.Bounds})";
             }
         }
@@ -176,6 +176,14 @@ namespace WindowsFormsApp2
             {
                 this.findButton_Click(null, null);
                 e.Handled = e.SuppressKeyPress = true;
+            }
+        }
+
+        private void focusButton_Click(object sender, EventArgs e)
+        {
+            if (CurrentWindow != null)
+            {
+                CurrentWindow.SetForeground();
             }
         }
     }

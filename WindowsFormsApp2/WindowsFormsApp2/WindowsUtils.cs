@@ -152,12 +152,6 @@ namespace WindowsFormsApp2
         }
     }
 
-    public struct Test
-    {
-        public int x1;
-        public int x2;
-    }
-
     public class WindowInfo
     {
         public IntPtr Handle { get; private set; }
@@ -177,28 +171,41 @@ namespace WindowsFormsApp2
             return IsWindow(Handle);
         }
 
-        public int Move(Point location)
+        public void Move(int x, int y)
         {
-            return _MoveWindow(location.X, location.Y, Bounds.Width, Bounds.Height);
+            var errCode = _MoveWindow(x, y, Bounds.Width, Bounds.Height);
+            if (errCode != 1)
+            {
+                // err
+            }
         }
 
-        public int Move(int x, int y)
+        public void Resize(int width, int height)
         {
-            return _MoveWindow(x, y, Bounds.Width, Bounds.Height);
+            var errCode = _MoveWindow(Bounds.X, Bounds.Y, width, height);
+            if (errCode != 1)
+            {
+                // err
+            }
         }
 
-        public int Resize(Size size)
+        public void SetFocus()
         {
-            return _MoveWindow(Bounds.X, Bounds.Y, size.Width, size.Height);
+            if (Handle != IntPtr.Zero)
+                SetFocus(Handle);
         }
 
-        public int Resize(int width, int height)
+        public void SetForeground()
         {
-            return _MoveWindow(Bounds.X, Bounds.Y, width, height);
+            if (Handle != IntPtr.Zero)
+                SetForegroundWindow(Handle);
         }
 
         private int _MoveWindow(int x, int y, int width, int height)
         {
+            if (Handle == IntPtr.Zero)
+                return 0;
+
             var success = MoveWindow(Handle, x, y, width, height, true);
             var errCode = 1;
             if (success)
@@ -215,6 +222,7 @@ namespace WindowsFormsApp2
             return errCode;
         }
 
+        #region DLL Import
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool IsWindow(IntPtr hWnd);
@@ -222,13 +230,21 @@ namespace WindowsFormsApp2
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool MoveWindow(IntPtr hWnd, int x, int y, int width, int height, bool bRepaint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetFocus(IntPtr hWnd);
+        #endregion
     }
 
-    public partial class MainForm : Form
+    public static class WindowsUtil
     {
-        private WindowInfo FindWindow(string windowName)
+        public static WindowInfo FindWindow(string windowName)
         {
-            if (windowName == null || windowName.Trim().Length == 0) 
+            if (windowName == null || windowName.Trim().Length == 0)
                 return null;
 
             WindowInfo ret = null;
@@ -252,7 +268,7 @@ namespace WindowsFormsApp2
 
                     var builder = new StringBuilder(length);
                     GetWindowText(hWnd, builder, length + 1);
-                    if (builder.ToString().StartsWith(windowName))
+                    if (builder.ToString().StartsWith(windowName, comparisonType: StringComparison.CurrentCultureIgnoreCase))
                     {
                         GetWindowRect(hWnd, out RECT bounds);
                         ret = new WindowInfo(hWnd, bounds, builder.ToString());
@@ -265,17 +281,8 @@ namespace WindowsFormsApp2
 
             return ret;
         }
-    }
 
-    public partial class MainForm : Form
-    {
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.I4)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
+        #region DLL Import
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
@@ -295,9 +302,6 @@ namespace WindowsFormsApp2
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        #endregion
     }
 }
