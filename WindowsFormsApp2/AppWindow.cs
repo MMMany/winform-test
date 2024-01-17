@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using System.Drawing;
 
 namespace WindowsFormsApp2
 {
@@ -13,12 +14,14 @@ namespace WindowsFormsApp2
     {
         public IntPtr Handle { get; private set; }
         public string Name { get; private set; }
-        public RECT Bounds { get; private set; }
+        public RECT Bounds => _bounds;
+
+        public bool IsValid => IsWindow(Handle);
 
         public static AppWindow FindWindow(string windowName, int retry = 5, int interval = 500, bool throwTimeout = true)
         {
             if (windowName == null || windowName.Length == 0)
-                throw new ArgumentException($"Invalid 'windowName'");
+                throw new ArgumentException("Invalid 'windowName'");
 
             AppWindow ret = null;
 
@@ -36,12 +39,58 @@ namespace WindowsFormsApp2
             return ret;
         }
 
+        public void Move(int x, int y)
+        {
+            this._Move(x, y, Bounds.Width, Bounds.Height);
+        }
+        
+        public void Move(Point location)
+        {
+            this._Move(location.X, location.Y, Bounds.Width, Bounds.Height);
+        }
+
+        public void Resize(int width, int height)
+        {
+            this._Move(Bounds.X, Bounds.Y, width, height);
+        }
+
+        public void Resize(Size size)
+        {
+            this._Move(Bounds.X, Bounds.Y, size.Width, size.Height);
+        }
+
+        public void UpdateBounds(RECT bounds)
+        {
+            this._Move(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+        }
+
+        public void SetForeground()
+        {
+            if (SetForegroundWindow(Handle))
+                return;
+            throw new InvalidOperationException("Failed set foreground.");
+        }
+
+        public void Reload(int retry = 5, int interval = 500)
+        {
+            for (int i = 0; i < retry; i++)
+            {
+                if (_Reload())
+                    return;
+                Task.Delay(interval).Wait();
+            }
+            throw new TimeoutException("Failed reload window.");
+        }
+
         #region Private
+        private RECT _bounds;
+        private readonly object _lock = new object();
+
         private AppWindow(IntPtr handle, string name, RECT bounds) 
         {
             Handle = handle;
             Name = name;
-            Bounds = bounds;
+            _bounds = bounds;
         }
 
         private static AppWindow _FindWindow(string windowName)
@@ -82,6 +131,30 @@ namespace WindowsFormsApp2
             }
 
             return ret;
+        }
+
+        private void _Move(int x, int y, int width, int height)
+        {
+            lock (_lock)
+            {
+                if (IsValid == false)
+                    Reload();
+                _bounds = new RECT(x, y, width, height);
+                if (MoveWindow(Handle, x, y, width, height, true))
+                    return;
+            }
+            throw new InvalidOperationException("Failed move window.");
+        }
+
+        private bool _Reload()
+        {
+            var window = FindWindow(Name, throwTimeout: false);
+            if (window != null)
+            {
+                Handle = window.Handle;
+                _bounds = window.Bounds;
+            }
+            return window != null;
         }
         #endregion
 

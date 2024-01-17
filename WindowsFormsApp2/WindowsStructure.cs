@@ -29,6 +29,8 @@ namespace WindowsFormsApp2
             (Right, Bottom) = (Left + size.Width, Top + size.Height);
         }
 
+        public static RECT Zero => new RECT(0, 0, 0, 0);
+
         public int X { get => Left; set => Left = value; }
         public int Y { get => Top; set => Top = value; }
         public int Width { get => Right - Left; set => Right = Left + value; }
@@ -165,5 +167,4 @@ namespace WindowsFormsApp2
             return (pt1.X != pt2.X || pt1.Y != pt2.Y);
         }
     }
-
 }

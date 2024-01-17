@@ -20,41 +20,67 @@ namespace WindowsFormsApp2
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
 
             var filter = @"Test file (*.txt)|*.txt";
             openFileDialog.Filter = filter;
             saveFileDialog.Filter = filter;
-            
+
             logTextBox.ReadOnly = true;
             logTextBox.BackColor = System.Drawing.SystemColors.Window;
         }
 
-        private void Debug(string message)
-        {
-            var action = new Action(() =>
-            {
-                if (logTextBox.TextLength == 0)
-                {
-                    logTextBox.AppendText(message);
-                }
-                else
-                {
-                    logTextBox.AppendText($"\n{message}");
-                }
-                logTextBox.ScrollToCaret();
-            });
+        //private void Debug(string message)
+        //{
+        //    var action = new Action(() =>
+        //    {
+        //        if (logTextBox.TextLength == 0)
+        //        {
+        //            logTextBox.AppendText(message);
+        //        }
+        //        else
+        //        {
+        //            logTextBox.AppendText($"\n{message}");
+        //        }
+        //        logTextBox.ScrollToCaret();
+        //    });
             
-            if (logTextBox.InvokeRequired)
+        //    if (logTextBox.InvokeRequired)
+        //    {
+        //        logTextBox.BeginInvoke(action);
+        //    }
+        //    else
+        //    {
+        //        action();
+        //    }
+        //}
+
+        private void Debug(params string[] messages)
+        {
+            void UpdateText(RichTextBox rtb, string text)
             {
-                logTextBox.BeginInvoke(action);
+                if (rtb.TextLength == 0)
+                    rtb.AppendText(text);
+                else
+                    rtb.AppendText($"\n{text}");
+                rtb.ScrollToCaret();
             }
-            else
+            Action<RichTextBox, string> action = UpdateText;
+            
+            foreach (var message in messages)
             {
-                action();
+                if (logTextBox.InvokeRequired)
+                    logTextBox.BeginInvoke(action, logTextBox, message);
+                else
+                    action(logTextBox, message);
             }
         }
 
-        private WindowInfo CurrentWindow = null;
+        private AppWindow CurrentWindow = null;
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -76,7 +102,7 @@ namespace WindowsFormsApp2
             base.OnFormClosing(e);
         }
 
-        private void openMenuItem_Click(object sender, EventArgs e)
+        private void OpenMenuItem_Click(object sender, EventArgs e)
         {
             var res = openFileDialog.ShowDialog();
             if (res == DialogResult.OK)
@@ -90,12 +116,12 @@ namespace WindowsFormsApp2
             
         }
 
-        private void saveMenuItem_Click(object sender, EventArgs e)
+        private void SaveMenuItem_Click(object sender, EventArgs e)
         {
             
         }
 
-        private void saveAsMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsMenuItem_Click(object sender, EventArgs e)
         {
             var res = saveFileDialog.ShowDialog();
             if (res == DialogResult.OK)
@@ -106,42 +132,33 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void settingsMenuItem_Click(object sender, EventArgs e)
+        private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
             
         }
 
-        private void closeMenuItem_Click(object sender, EventArgs e)
+        private void CloseMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void aboutMenuItem_Click(object sender, EventArgs e)
+        private void AboutMenuItem_Click(object sender, EventArgs e)
         {
             
         }
 
-        private void findButton_Click(object sender, EventArgs e)
+        private void FindButton_Click(object sender, EventArgs e)
         {
             if (findTextBox.TextLength != 0)
             {
-                var window = WindowsUtil.FindWindow(findTextBox.Text);
-                if (window != null)
-                {
-                    findResultLabel.Text = $"{window.Name} ({window.Bounds})";
-                    Debug($"Window found : {window.Name} / {window.Bounds}");
-                    CurrentWindow = window;
-                }
-                else
-                {
-                    findResultLabel.Text = "Not Found";
-                    Debug($"Window not found : {findTextBox.Text}");
-                    CurrentWindow = null;
-                }
+                var window = AppWindow.FindWindow(findTextBox.Text);
+                findResultLabel.Text = $"{window.Name} ({window.Bounds})";
+                Debug($"Window found : {window.Name} / {window.Bounds}");
+                CurrentWindow = window;
             }
         }
 
-        private void moveWindowButton_Click(object sender, EventArgs e)
+        private void MoveWindowButton_Click(object sender, EventArgs e)
         {
             if (posXTestBox.TextLength == 0 || posYTextBox.TextLength == 0)
                 return;
@@ -155,7 +172,7 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void resizeWindowButton_Click(object sender, EventArgs e)
+        private void ResizeWindowButton_Click(object sender, EventArgs e)
         {
             if (widthTextBox.TextLength == 0 || heightTextBox.TextLength == 0)
                 return;
@@ -169,32 +186,79 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void numericTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void NumericTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
-        private void findTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void FindTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.findButton_Click(null, null);
+                this.FindButton_Click(null, null);
                 e.Handled = e.SuppressKeyPress = true;
             }
         }
 
-        private void focusButton_Click(object sender, EventArgs e)
+        private void FocusButton_Click(object sender, EventArgs e)
         {
             if (CurrentWindow != null)
             {
                 CurrentWindow.SetForeground();
             }
+        }
+
+        private string sourcePath;
+        private string targetPath;
+
+        private void Load1Button_Click(object sender, EventArgs e)
+        {
             using (var dialog = new OpenFileDialog())
             {
+                dialog.Filter = @"PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg";
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    var image = new Image<Bgr, Byte>(dialog.FileName);
+                    var image = new Image<Bgr, byte>(dialog.FileName);
                     pictureBox1.Image = image.ToBitmap();
+                    sourcePath = dialog.FileName;
+                }
+            }
+        }
+
+        private void Load2Button_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.Filter = @"PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var image = new Image<Bgr, byte>(dialog.FileName);
+                    pictureBox2.Image = image.ToBitmap();
+                    targetPath = dialog.FileName;
+                }
+            }
+        }
+
+        private void ImageFindButton_Click(object sender, EventArgs e)
+        {
+            using (var source = new Image<Gray, byte>(sourcePath))
+            using (var target = new Image<Gray, byte>(targetPath))
+            using (var result = source.MatchTemplate(target, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
+            {
+                result.MinMax(
+                    out double[] minValues, out double[] maxValues,
+                    out Point[] minLocations, out Point[] maxLocations);
+
+                if (maxValues.First() > 0.8)
+                {
+                    var match = new Rectangle(maxLocations[0], target.Size);
+                    source.Draw(match, new Gray(255), 2);
+                    pictureBox1.Image = source.ToBitmap();
+                    Debug($"Found : {match}", $"Score : {maxValues.First()}");
+                }
+                else
+                {
+                    Debug("Not found");
                 }
             }
         }

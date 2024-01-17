@@ -59,8 +59,13 @@ namespace WindowsFormsApp2
             this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.focusButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.load1Button = new System.Windows.Forms.Button();
+            this.load2Button = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.imageFindButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -70,7 +75,7 @@ namespace WindowsFormsApp2
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(426, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(880, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -93,7 +98,7 @@ namespace WindowsFormsApp2
             this.openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openMenuItem.Size = new System.Drawing.Size(199, 22);
             this.openMenuItem.Text = "Open...";
-            this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
+            this.openMenuItem.Click += new System.EventHandler(this.OpenMenuItem_Click);
             // 
             // saveMenuItem
             // 
@@ -101,7 +106,7 @@ namespace WindowsFormsApp2
             this.saveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveMenuItem.Size = new System.Drawing.Size(199, 22);
             this.saveMenuItem.Text = "Save";
-            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
+            this.saveMenuItem.Click += new System.EventHandler(this.SaveMenuItem_Click);
             // 
             // saveAsMenuItem
             // 
@@ -110,7 +115,7 @@ namespace WindowsFormsApp2
             | System.Windows.Forms.Keys.S)));
             this.saveAsMenuItem.Size = new System.Drawing.Size(199, 22);
             this.saveAsMenuItem.Text = "Save As...";
-            this.saveAsMenuItem.Click += new System.EventHandler(this.saveAsMenuItem_Click);
+            this.saveAsMenuItem.Click += new System.EventHandler(this.SaveAsMenuItem_Click);
             // 
             // settingsMenuItem
             // 
@@ -118,7 +123,7 @@ namespace WindowsFormsApp2
             this.settingsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
             this.settingsMenuItem.Size = new System.Drawing.Size(199, 22);
             this.settingsMenuItem.Text = "Settings";
-            this.settingsMenuItem.Click += new System.EventHandler(this.settingsMenuItem_Click);
+            this.settingsMenuItem.Click += new System.EventHandler(this.SettingsMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -130,7 +135,7 @@ namespace WindowsFormsApp2
             this.closeMenuItem.Name = "closeMenuItem";
             this.closeMenuItem.Size = new System.Drawing.Size(199, 22);
             this.closeMenuItem.Text = "Close";
-            this.closeMenuItem.Click += new System.EventHandler(this.closeMenuItem_Click);
+            this.closeMenuItem.Click += new System.EventHandler(this.CloseMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -145,7 +150,7 @@ namespace WindowsFormsApp2
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutMenuItem.Text = "About";
-            this.aboutMenuItem.Click += new System.EventHandler(this.aboutMenuItem_Click);
+            this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
             // openFileDialog
             // 
@@ -166,24 +171,21 @@ namespace WindowsFormsApp2
             // 
             // findTextBox
             // 
-            this.findTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.findTextBox.Location = new System.Drawing.Point(62, 32);
             this.findTextBox.Name = "findTextBox";
             this.findTextBox.Size = new System.Drawing.Size(271, 21);
             this.findTextBox.TabIndex = 101;
-            this.findTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.findTextBox_KeyDown);
+            this.findTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FindTextBox_KeyDown);
             // 
             // findButton
             // 
-            this.findButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.findButton.Location = new System.Drawing.Point(339, 31);
             this.findButton.Name = "findButton";
             this.findButton.Size = new System.Drawing.Size(75, 23);
             this.findButton.TabIndex = 102;
             this.findButton.Text = "Find";
             this.findButton.UseVisualStyleBackColor = true;
-            this.findButton.Click += new System.EventHandler(this.findButton_Click);
+            this.findButton.Click += new System.EventHandler(this.FindButton_Click);
             // 
             // label2
             // 
@@ -205,25 +207,23 @@ namespace WindowsFormsApp2
             // 
             // moveWindowButton
             // 
-            this.moveWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveWindowButton.Location = new System.Drawing.Point(302, 86);
             this.moveWindowButton.Name = "moveWindowButton";
             this.moveWindowButton.Size = new System.Drawing.Size(75, 23);
             this.moveWindowButton.TabIndex = 107;
             this.moveWindowButton.Text = "Move";
             this.moveWindowButton.UseVisualStyleBackColor = true;
-            this.moveWindowButton.Click += new System.EventHandler(this.moveWindowButton_Click);
+            this.moveWindowButton.Click += new System.EventHandler(this.MoveWindowButton_Click);
             // 
             // resizeWindowButton
             // 
-            this.resizeWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.resizeWindowButton.Location = new System.Drawing.Point(302, 115);
             this.resizeWindowButton.Name = "resizeWindowButton";
             this.resizeWindowButton.Size = new System.Drawing.Size(75, 23);
             this.resizeWindowButton.TabIndex = 108;
             this.resizeWindowButton.Text = "Resize";
             this.resizeWindowButton.UseVisualStyleBackColor = true;
-            this.resizeWindowButton.Click += new System.EventHandler(this.resizeWindowButton_Click);
+            this.resizeWindowButton.Click += new System.EventHandler(this.ResizeWindowButton_Click);
             // 
             // label3
             // 
@@ -245,25 +245,21 @@ namespace WindowsFormsApp2
             // 
             // posXTestBox
             // 
-            this.posXTestBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.posXTestBox.Location = new System.Drawing.Point(62, 86);
             this.posXTestBox.Name = "posXTestBox";
             this.posXTestBox.ShortcutsEnabled = false;
             this.posXTestBox.Size = new System.Drawing.Size(190, 21);
             this.posXTestBox.TabIndex = 103;
-            this.posXTestBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericTextBox_KeyPress);
+            this.posXTestBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericTextBox_KeyPress);
             // 
             // posYTextBox
             // 
-            this.posYTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.posYTextBox.Location = new System.Drawing.Point(62, 114);
             this.posYTextBox.Name = "posYTextBox";
             this.posYTextBox.ShortcutsEnabled = false;
             this.posYTextBox.Size = new System.Drawing.Size(190, 21);
             this.posYTextBox.TabIndex = 104;
-            this.posYTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericTextBox_KeyPress);
+            this.posYTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericTextBox_KeyPress);
             // 
             // label5
             // 
@@ -276,14 +272,12 @@ namespace WindowsFormsApp2
             // 
             // widthTextBox
             // 
-            this.widthTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.widthTextBox.Location = new System.Drawing.Point(62, 143);
             this.widthTextBox.Name = "widthTextBox";
             this.widthTextBox.ShortcutsEnabled = false;
             this.widthTextBox.Size = new System.Drawing.Size(190, 21);
             this.widthTextBox.TabIndex = 105;
-            this.widthTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericTextBox_KeyPress);
+            this.widthTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericTextBox_KeyPress);
             // 
             // label6
             // 
@@ -296,23 +290,18 @@ namespace WindowsFormsApp2
             // 
             // heightTextBox
             // 
-            this.heightTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.heightTextBox.Location = new System.Drawing.Point(62, 171);
             this.heightTextBox.Name = "heightTextBox";
             this.heightTextBox.ShortcutsEnabled = false;
             this.heightTextBox.Size = new System.Drawing.Size(190, 21);
             this.heightTextBox.TabIndex = 106;
-            this.heightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericTextBox_KeyPress);
+            this.heightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericTextBox_KeyPress);
             // 
             // logTextBox
             // 
-            this.logTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.logTextBox.Location = new System.Drawing.Point(12, 198);
             this.logTextBox.Name = "logTextBox";
-            this.logTextBox.Size = new System.Drawing.Size(402, 133);
+            this.logTextBox.Size = new System.Drawing.Size(402, 189);
             this.logTextBox.TabIndex = 13;
             this.logTextBox.Text = "";
             // 
@@ -324,22 +313,65 @@ namespace WindowsFormsApp2
             this.focusButton.TabIndex = 109;
             this.focusButton.Text = "Focus";
             this.focusButton.UseVisualStyleBackColor = true;
-            this.focusButton.Click += new System.EventHandler(this.focusButton_Click);
+            this.focusButton.Click += new System.EventHandler(this.FocusButton_Click);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(314, 337);
+            this.pictureBox1.Location = new System.Drawing.Point(431, 32);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.Size = new System.Drawing.Size(360, 180);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 110;
             this.pictureBox1.TabStop = false;
+            // 
+            // load1Button
+            // 
+            this.load1Button.Location = new System.Drawing.Point(797, 32);
+            this.load1Button.Name = "load1Button";
+            this.load1Button.Size = new System.Drawing.Size(75, 23);
+            this.load1Button.TabIndex = 111;
+            this.load1Button.Text = "Load1";
+            this.load1Button.UseVisualStyleBackColor = true;
+            this.load1Button.Click += new System.EventHandler(this.Load1Button_Click);
+            // 
+            // load2Button
+            // 
+            this.load2Button.Location = new System.Drawing.Point(797, 198);
+            this.load2Button.Name = "load2Button";
+            this.load2Button.Size = new System.Drawing.Size(75, 23);
+            this.load2Button.TabIndex = 112;
+            this.load2Button.Text = "Load2";
+            this.load2Button.UseVisualStyleBackColor = true;
+            this.load2Button.Click += new System.EventHandler(this.Load2Button_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(431, 218);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(360, 180);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 113;
+            this.pictureBox2.TabStop = false;
+            // 
+            // imageFindButton
+            // 
+            this.imageFindButton.Location = new System.Drawing.Point(797, 335);
+            this.imageFindButton.Name = "imageFindButton";
+            this.imageFindButton.Size = new System.Drawing.Size(75, 23);
+            this.imageFindButton.TabIndex = 114;
+            this.imageFindButton.Text = "Find";
+            this.imageFindButton.UseVisualStyleBackColor = true;
+            this.imageFindButton.Click += new System.EventHandler(this.ImageFindButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 399);
+            this.ClientSize = new System.Drawing.Size(880, 399);
+            this.Controls.Add(this.imageFindButton);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.load2Button);
+            this.Controls.Add(this.load1Button);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.focusButton);
             this.Controls.Add(this.logTextBox);
@@ -359,12 +391,14 @@ namespace WindowsFormsApp2
             this.Controls.Add(this.findTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -401,6 +435,10 @@ namespace WindowsFormsApp2
         private System.Windows.Forms.RichTextBox logTextBox;
         private System.Windows.Forms.Button focusButton;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button load1Button;
+        private System.Windows.Forms.Button load2Button;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button imageFindButton;
     }
 }
 
