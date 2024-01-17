@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Emgu.CV;
+using Emgu.CV.Structure;
+using Emgu.CV.Features2D;
+using Emgu.Util;
 
 namespace WindowsFormsApp2
 {
@@ -184,6 +188,14 @@ namespace WindowsFormsApp2
             if (CurrentWindow != null)
             {
                 CurrentWindow.SetForeground();
+            }
+            using (var dialog = new OpenFileDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var image = new Image<Bgr, Byte>(dialog.FileName);
+                    pictureBox1.Image = image.ToBitmap();
+                }
             }
         }
     }

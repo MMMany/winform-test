@@ -58,7 +58,9 @@ namespace WindowsFormsApp2
             this.heightTextBox = new System.Windows.Forms.TextBox();
             this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.focusButton = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -310,7 +312,7 @@ namespace WindowsFormsApp2
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logTextBox.Location = new System.Drawing.Point(12, 198);
             this.logTextBox.Name = "logTextBox";
-            this.logTextBox.Size = new System.Drawing.Size(402, 189);
+            this.logTextBox.Size = new System.Drawing.Size(402, 133);
             this.logTextBox.TabIndex = 13;
             this.logTextBox.Text = "";
             // 
@@ -324,11 +326,21 @@ namespace WindowsFormsApp2
             this.focusButton.UseVisualStyleBackColor = true;
             this.focusButton.Click += new System.EventHandler(this.focusButton_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(314, 337);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 110;
+            this.pictureBox1.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(426, 399);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.focusButton);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.heightTextBox);
@@ -352,6 +364,7 @@ namespace WindowsFormsApp2
             this.Text = "MainForm";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,6 +400,7 @@ namespace WindowsFormsApp2
         private System.Windows.Forms.TextBox heightTextBox;
         private System.Windows.Forms.RichTextBox logTextBox;
         private System.Windows.Forms.Button focusButton;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
