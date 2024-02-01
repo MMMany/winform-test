@@ -25,7 +25,8 @@ namespace WinUserApi
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport(LibraryName)]
-        public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
+        //public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport(LibraryName, CharSet = CharSet.Auto)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
@@ -37,7 +38,8 @@ namespace WinUserApi
         public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport(LibraryName)]
-        public static extern bool GetCursorPos(out Point point);
+        //public static extern bool GetCursorPos(out Point point);
+        public static extern bool GetCursorPos(out POINT point);
 
         [DllImport(LibraryName)]
         public static extern bool SetCursorPos(int x, int y);

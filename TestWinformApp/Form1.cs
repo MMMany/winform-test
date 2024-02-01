@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestWinformApp.Internal;
@@ -28,62 +29,104 @@ namespace TestWinformApp
             }
         }
 
+        private Stack<Dummy> _stack = new Stack<Dummy>();
+        private CancellationTokenSource _cts;
+
         private void button1_Click(object sender, EventArgs e)
         {
-            //Utils.RunOnSTA<string, string>((t1, t2) =>
-            //{
-            //    Logging.Logger.Debug(t1);
-            //    Logging.Logger.Debug(t2);
-            //}, "Hello", "World");
-            
-
-            var windowName = textBox1.Text.Trim();
-            if (windowName.Length == 0) return;
+            //var windowName = textBox1.Text.Trim();
+            //if (windowName.Length == 0) return;
+            //var thisWindow = new AppWindow(this);
 
             Logging.Logger.Debug("Do action");
+            var items = new[]
+            {
+                new Dummy("TC-1", 5),
+                new Dummy("TC-2", 7),
+                new Dummy("TC-3", 10)
+            };
+            foreach (var it in items.Reverse())
+            {
+                _stack.Push(it);
+            }
 
-            var thisWindow = new AppWindow(this);
+            _cts = new CancellationTokenSource();
 
             Task.Run(() =>
             {
-                if (DoAction(windowName).Result)
+                try
                 {
-                    Logging.Logger.Debug("Completed action");
-
-                    //var text = Utils.GetClipboardText();
-                    var text = Utils.RunOnSTA(() => Clipboard.GetText(TextDataFormat.Text)).Result;
-
-                    Logging.Logger.Debug($"Text: {text}");
-                    label1.BeginInvoke(new Action(() => label1.Text = text));
-                    thisWindow.SetForeground();
+                    if (DoDummyAsync().Result)
+                    {
+                        Logging.Logger.Debug("Completed action");
+                    }
+                    else
+                    {
+                        Logging.Logger.Debug("Failed action");
+                    }
                 }
-                else
+                catch (OperationCanceledException)
                 {
-                    Logging.Logger.Debug("Failed action");
+                    Logging.Logger.Debug($"Main Loop: Cancelled");
                 }
-            });
+                catch (AggregateException aggEx)
+                {
+                    foreach (var ex in aggEx.InnerExceptions)
+                    {
+                        if (!(ex is OperationCanceledException))
+                            Logging.Logger.Error($"Error: {ex.Message}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logger.Error($"Error: {ex.Message}");
+                }
+                finally
+                {
+                    _cts?.Dispose();
+                    _cts = null;
+                }
+            }, _cts.Token);
         }
 
-        private async Task<bool> DoAction(string windowName)
+        private async Task<bool> DoAsync(string windowName)
         {
             var window = await AppWindow.FindWIndowAsync(windowName);
             if (window == null) return false;
+            Logging.Logger.Debug($"Handle: {window.Handle}");
+            Logging.Logger.Debug($"Name: {window.Name}");
+            Logging.Logger.Debug($"Bounds: {window.Bounds}");
 
-            // Change Focus
-            window.SetForeground();
-            await Task.Delay(100);
-
-            // Select All
-            WindowsInput.KeyboardDown(VirtualKey.LCONTROL);
-            WindowsInput.KeyboardPress(VirtualKey.A);
-            WindowsInput.KeyboardUp(VirtualKey.LCONTROL);
-
-            // Copy
-            WindowsInput.KeyboardDown(VirtualKey.LCONTROL);
-            WindowsInput.KeyboardPress(VirtualKey.C);
-            WindowsInput.KeyboardUp(VirtualKey.LCONTROL);
+            while (_stack.Count != 0)
+            {
+                var it = _stack.Pop();
+                await it.RunAsync(_cts.Token);
+            }
 
             return true;
+        }
+
+        private async Task<bool> DoDummyAsync()
+        {
+            while (_stack.Count != 0)
+            {
+                try
+                {
+                    var it = _stack.Pop();
+                    await it.RunAsync(_cts.Token);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            return true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _cts?.Cancel();
         }
     }
 }

@@ -4,10 +4,131 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace WinUserApi
 {
     public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+
+        public RECT(int left, int top, int right, int bottom)
+        {
+            (Left, Top, Right, Bottom) = (left, top, right, bottom);
+        }
+
+        public RECT(Point location, Size size)
+        {
+            (Left, Top) = (location.X, location.Y);
+            (Right, Bottom) = (location.X + size.Width, location.Y + size.Height);
+        }
+
+        public static RECT Empty => new RECT(0, 0, 0, 0);
+
+        public int X { get => Left; set => Left = value; }
+        public int Y { get => Top; set => Top = value; }
+        public int Width { get => Right - Left; set => Right = Left + value; }
+        public int Height { get => Bottom - Top; set => Bottom = Top + value; }
+
+        public Point Location
+        {
+            get => new Point(X, Y);
+            set
+            {
+                var (width, height) = (Width, Height);
+                (X, Y) = (value.X, value.Y);
+                (Width, Height) = (width, height);
+            }
+        }
+        public Size Size
+        {
+            get => new Size(Width, Height);
+            set => (Width, Height) = (value.Width, value.Height);
+        }
+
+        public Point Center => new Point(X + (int)(Width / 2), Y + (int)(Height / 2));
+
+        public override string ToString() => $"RECT[{Left}, {Top}, {Right}, {Bottom}]";
+
+        public override bool Equals(object obj)
+        {
+            return obj is RECT rECT &&
+                   Left == rECT.Left &&
+                   Top == rECT.Top &&
+                   Right == rECT.Right &&
+                   Bottom == rECT.Bottom;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1819631549;
+            hashCode = hashCode * -1521134295 + Left.GetHashCode();
+            hashCode = hashCode * -1521134295 + Top.GetHashCode();
+            hashCode = hashCode * -1521134295 + Right.GetHashCode();
+            hashCode = hashCode * -1521134295 + Bottom.GetHashCode();
+            return hashCode;
+        }
+
+        public static implicit operator Rectangle(RECT rect) => new Rectangle(rect.Location, rect.Size);
+        public static implicit operator RECT(Rectangle rect) => new RECT(rect.Location, rect.Size);
+
+        public static bool operator ==(RECT left, RECT right)
+        {
+            return left.Equals(right);
+        }
+        public static bool operator !=(RECT left, RECT right)
+        {
+            return !(left == right);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+
+        public POINT(int x, int y)
+        {
+            (X, Y) = (x, y);
+        }
+
+        public override string ToString() => $"POINT[{X}, {Y}]";
+
+        public override bool Equals(object obj)
+        {
+            return obj is POINT pOINT &&
+                   X == pOINT.X &&
+                   Y == pOINT.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1861411795;
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(POINT left, POINT right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(POINT left, POINT right)
+        {
+            return !(left == right);
+        }
+
+        public static implicit operator Point(POINT point) => new Point(point.X, point.Y);
+        public static implicit operator POINT(Point point) => new POINT(point.X, point.Y);
+    }
 
     [Flags]
     public enum MouseInputFlags
