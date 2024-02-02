@@ -26,7 +26,11 @@ namespace TestWinformApp.Internal
                 if (_isSetup) return;
 
                 var config = new LoggingConfiguration();
-                var logConsole = new ConsoleTarget("logconsole");
+                var layout = @"${longdate} | ${level:uppercase=true:padding=-5} | ${message:withException=True}";
+                var logConsole = new ConsoleTarget("logconsole")
+                {
+                    Layout = layout
+                };
                 config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
                 LogManager.Configuration = config;
                 _isSetup = true;
